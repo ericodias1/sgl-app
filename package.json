@@ -1,7 +1,7 @@
 {
   "name": "sgl-app",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -9,10 +9,24 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo/metro-runtime": "~6.1.2",
+    "babel-preset-expo": "~54.0.0",
     "expo": "~54.0.4",
+    "expo-constants": "~18.0.8",
+    "expo-linking": "~8.0.8",
+    "expo-router": "^6.0.2",
     "expo-status-bar": "~3.0.8",
+    "nativewind": "^4.2.0",
+    "prettier-plugin-tailwindcss": "^0.5.14",
     "react": "19.1.0",
-    "react-native": "0.81.4"
+    "react-dom": "19.1.0",
+    "react-native": "0.81.4",
+    "react-native-reanimated": "~4.1.0",
+    "react-native-safe-area-context": "~5.6.0",
+    "react-native-screens": "~4.16.0",
+    "react-native-worklets": "0.5.1",
+    "tailwindcss": "^3.4.17",
+    "expo-updates": "~29.0.10"
   },
   "private": true
 }
