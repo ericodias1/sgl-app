@@ -1,40 +1,27 @@
-// import "react-native-reanimated";
-import "../global.css";
+import { useRouter } from 'expo-router';
+import { useEffect } from 'react';
+import { ActivityIndicator, View } from 'react-native';
+import { useSession } from '../src/store/session'; // sua store
 
-import { StyleSheet, Text, View } from "react-native";
+export default function Index() {
+  const router = useRouter();
+  const { bootstrapped, accessToken, bootstrap } = useSession();
 
-import { Link } from "expo-router";
+  useEffect(() => { bootstrap(); }, []);
 
-export default function Page() {
+  useEffect(() => {
+    if (!bootstrapped) return;
+
+    if (accessToken) {
+      router.replace('/(app)/home');
+    } else {
+      router.replace('/(auth)/sign-in');
+    }
+  }, [bootstrapped, accessToken]);
+
   return (
-    <View style={styles.container}>
-      <View style={styles.main}>
-        <Text className="text-2xl font-bold text-brand-500">Sim Golf Logic</Text>
-        <Text style={styles.subtitle}>This is the first page of your app.</Text>
-        <Link href="/about" className="btn-primary">About</Link>
-      </View>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <ActivityIndicator />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    padding: 24,
-  },
-  main: {
-    flex: 1,
-    justifyContent: "center",
-    maxWidth: 960,
-    marginHorizontal: "auto",
-  },
-  title: {
-    fontSize: 64,
-    fontWeight: "bold",
-  },
-  subtitle: {
-    fontSize: 36,
-    color: "#38434D",
-  },
-});
