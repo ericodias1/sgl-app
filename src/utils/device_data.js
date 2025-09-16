@@ -1,6 +1,7 @@
 import * as Application from 'expo-application';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
+import { Platform } from 'react-native';
 import { getSecure, setSecure } from './secure_store';
 
 const DEVICE_UUID_KEY = 'device_uuid';
@@ -30,7 +31,24 @@ export async function getDevicePushToken() {
   let pushToken = await getSecure(DEVICE_PUSH_TOKEN_KEY);
   if (pushToken) return pushToken;
 
-  const { data: nativeToken } = await Notifications.getDevicePushTokenAsync();
+  let nativeToken = null;
+  try {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    if (existingStatus !== "granted") {
+      await Notifications.requestPermissionsAsync();
+    }
+
+    if (Platform.OS === "android") {
+      Notifications.setNotificationChannelAsync("default", {
+        name: "default",
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: "#444444",
+      });
+    }
+
+    nativeToken = (await Notifications.getDevicePushTokenAsync()).data;
+  } catch {}
   await setSecure(DEVICE_PUSH_TOKEN_KEY, nativeToken);
 
   return nativeToken;
