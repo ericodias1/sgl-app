@@ -11,13 +11,12 @@ export default function Slider({ slideAction }) {
   const [sliding, setSliding] = useState(false);
 
   function startSliding() {
-    if (sliding) return;
-
     setSliding(true);
-    sliderPos.value = withSpring(sliderRef.current.slideLimitX);
+
+    sliderPos.value = withSpring(sliderRef.current.slideLimitX, { duration: 1000 });
     setTimeout(() => {
       slideAction();
-    }, 800);
+    }, 1100);
   }
 
   return (
