@@ -10,7 +10,7 @@ export default function AppLayout() {
 
   useEffect(() => {
     if (!bootstrapped) return;
-    if (!accessToken) router.replace('/(auth)/welcome');
+    if (!accessToken) router.replace('/(welcome)');
   }, [bootstrapped, accessToken]);
 
   if (!bootstrapped) return <SplashScreen />;

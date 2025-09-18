@@ -2,16 +2,16 @@ import "../../global.css"
 import { Image, Text, View } from "react-native";
 import Slider from "../../components/Slider";
 import { router } from "expo-router";
-import AuthWrapper from "./AuthWrapper";
+import Wrapper from "../../components/auth/Wrapper";
 
 export default function Welcome() {
 
   const goToSignIn = () => {
-    router.replace('(auth)/sign-in');
+    router.replace('/sign-in');
   };
 
   return (
-    <AuthWrapper>
+    <Wrapper>
       <Image style={{ width: '100%', height: '15%'}}
               source={require("../../assets/icon-with-name.png")} />
 
@@ -36,6 +36,6 @@ export default function Welcome() {
       </View>
 
       <Slider slideAction={goToSignIn} />
-    </AuthWrapper>
+    </Wrapper>
   );
 };
