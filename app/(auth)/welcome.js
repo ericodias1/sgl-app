@@ -13,7 +13,7 @@ export default function Welcome() {
   return (
     <AuthWrapper>
       <Image style={{ width: '100%', height: '15%'}}
-              source={require("../../assets/icon_with_name.png")} />
+              source={require("../../assets/icon-with-name.png")} />
 
       <View className="flex gap-5 mb-10">
         <Text className="text-white font-extrabold text-center"
