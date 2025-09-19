@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
-import { ActivityIndicator, Button, Text, TextInput, View } from 'react-native';
-
+import { useState } from 'react';
+import { ActivityIndicator, Pressable, Text, TouchableHighlight, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSession } from '../../src/store/session';
+import Wrapper from "../../components/auth/Wrapper";
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import Animated, { useAnimatedKeyboard, useAnimatedStyle } from 'react-native-reanimated';
+import EmailInput from './EmailInput';
+import PasswordInput from './PasswordInput';
 
 export default function SignIn() {
   const router = useRouter();
@@ -13,6 +16,12 @@ export default function SignIn() {
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState(null);
+  const [hidePassword, setHidePassword] = useState(true);
+
+  const keyboard = useAnimatedKeyboard();
+  const animatedStyles = useAnimatedStyle(() => ({
+    transform: [{ translateY: (-keyboard.height.value) }],
+  }))
 
   const onSubmit = async () => {
     setBusy(true); setErr(null);
@@ -28,26 +37,52 @@ export default function SignIn() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ padding: 24, gap: 12 }}>
-        <TextInput
-          placeholder="Email"
-          autoCapitalize="none"
-          keyboardType="email-address"
-          onChangeText={setEmail}
-          value={email}
-          style={{ borderWidth: 1, padding: 12, borderRadius: 8 }}
-        />
-        <TextInput
-          placeholder="Password"
-          secureTextEntry
-          onChangeText={setPassword}
-          value={password}
-          style={{ borderWidth: 1, padding: 12, borderRadius: 8 }}
-        />
-        {busy ? <ActivityIndicator/> : <Button title="Sign in" onPress={onSubmit} />}
-        {err && <Text style={{ color: 'red' }}>{err}</Text>}
+    <Wrapper>
+      <Pressable onPress={() => router.replace('(welcome)')}>
+        <MaterialIcons name="arrow-back" size={32} color="#edfc00" />
+      </Pressable>
+
+      <View className="flex-1 justify-end">
+        <Animated.View className="flex-1 justify-end mb-10 gap-5 max-h-[70%]" style={animatedStyles}>
+          <View className="flex gap-5" >
+            <EmailInput
+              value={email}
+              onChangeText={setEmail}
+            />
+            <PasswordInput
+              value={password}
+              onChangeText={setPassword}
+              hidePassword={hidePassword}
+              setHidePassword={setHidePassword}
+            />
+          </View>
+
+          <View className="flex-row justify-end">
+            <Text className="text-white font-semibold">Forgot Password?</Text>
+          </View>
+
+          {busy ? (
+            <View
+              className="bg-brand-600 py-6 rounded-full items-center shadow-xl shadow-brand-600"
+              onTouchStart={() => setBusy(false)}
+            >
+              <ActivityIndicator color="#745e0f"/> 
+            </View>
+          ) : (
+            <TouchableHighlight
+              onPress={() => setBusy(true)}
+              underlayColor="#d1cb00"
+              className="bg-brand-500 py-5 rounded-full items-center shadow-xl shadow-brand-600"
+            >
+              <Text className="text-[#1C1B1F] font-semibold text-2xl">
+                Login
+              </Text>
+            </TouchableHighlight>
+          )}
+
+          {err && <Text style={{ color: 'red' }}>{err}</Text>}
+        </Animated.View>
       </View>
-    </SafeAreaView>
+    </Wrapper>
   );
 }
