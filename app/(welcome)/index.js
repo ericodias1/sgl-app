@@ -36,7 +36,7 @@ export default function Welcome() {
           </Text>
         </View>
 
-        <Slider slideAction={goToSignIn} />
+        <Slider onSlideEnd={goToSignIn} />
       </View>
     </Wrapper>
   );

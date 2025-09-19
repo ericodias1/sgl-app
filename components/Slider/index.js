@@ -4,7 +4,7 @@ import Chevrons from "./Chevrons";
 import Label from "./Label";
 import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
 
-export default function Slider({ slideAction }) {
+export default function Slider({ onSlideEnd }) {
   const sliderLimitX = useRef(0);
 
   const [thumbWidth, setThumbWidth] = useState(0);
@@ -19,7 +19,7 @@ export default function Slider({ slideAction }) {
 
     thumbPosition.value = withSpring(sliderLimitX.current - thumbWidth, { duration: 1000 });
     setTimeout(() => {
-      slideAction();
+      onSlideEnd();
     }, 1100);
   };
 
