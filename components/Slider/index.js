@@ -1,46 +1,54 @@
+import { TouchableOpacity, View } from "react-native";
 import { useRef, useState } from "react";
-import "../../global.css"
-import { TouchableOpacity } from "react-native";
-import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
 import Chevrons from "./Chevrons";
 import Label from "./Label";
+import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
 
 export default function Slider({ slideAction }) {
-  const sliderPos = useSharedValue(0);
-  const sliderRef = useRef({ sliderIconWidth: 0, slideLimitX: 0 });
+  const sliderLimitX = useRef(0);
+
+  const [thumbWidth, setThumbWidth] = useState(0);
   const [sliding, setSliding] = useState(false);
 
+  const thumbPosition = useSharedValue(0);
+
   function startSliding() {
+    if (sliding) return;
+
     setSliding(true);
 
-    sliderPos.value = withSpring(sliderRef.current.slideLimitX, { duration: 1000 });
+    thumbPosition.value = withSpring(sliderLimitX.current - thumbWidth, { duration: 1000 });
     setTimeout(() => {
       slideAction();
     }, 1100);
-  }
+  };
 
   return (
     <TouchableOpacity
       activeOpacity={1}
       style={{ width: '100%', height: '9%' }}
-      className="bg-black/50 rounded-full shadow-lg shadow-black px-3 py-2 flex-row justify-end items-center"
+      className="bg-black/50 rounded-full shadow-lg shadow-black px-3 py-2"
       onPress={() => startSliding()}
-      onLayout={(event) => {
-        const { x, width } = event.nativeEvent.layout;
-        sliderRef.current.slideLimitX = (width - x - sliderRef.current.sliderIconWidth);
-      }}
     >
-      <Animated.Image
-        className="absolute mx-3 my-2 z-10 bg-black rounded-full"
-        style={{ width: '18%', height: '100%', left: sliderPos }}
-        source={require("../../assets/icon.png")}
+      <View
+        className="flex-row justify-end items-center h-full"
         onLayout={(event) => {
-          const { width } = event.nativeEvent.layout;
-          sliderRef.current.sliderIconWidth = width;
+          const { width } = event.nativeEvent.layout
+          sliderLimitX.current = width
         }}
-      />
-      <Label sliding={sliding}/>
-      <Chevrons />
+      >
+        <Animated.Image
+          className="absolute z-10 bg-black rounded-full"
+          style={{ width: thumbWidth, aspectRatio: 0, height: '100%', left: thumbPosition }}
+          source={require("../../assets/icon.png")}
+          onLayout={(event) => {
+            const { height } = event.nativeEvent.layout;
+            setThumbWidth(height)
+          }}
+        />
+        <Label sliding={sliding}/>
+        <Chevrons />
+      </View>
     </TouchableOpacity>
   );
 };
