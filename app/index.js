@@ -15,7 +15,7 @@ export default function Index() {
     if (accessToken) {
       router.replace('/(app)/home');
     } else {
-      router.replace('/(auth)/sign-in');
+      router.replace('/(welcome)');
     }
   }, [bootstrapped, accessToken]);
 
