@@ -1,18 +1,12 @@
-import { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
-
+import { useState } from 'react';
+import { ActivityIndicator, Pressable, Text, TouchableHighlight, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSession } from '../../src/store/session';
-
 import Wrapper from "../../components/auth/Wrapper";
-import IconTextInput from '../../components/inputs/IconTextInput';
-
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import Animated, { useAnimatedKeyboard, useAnimatedProps, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
-import Svg, { Line } from 'react-native-svg';
-
-const AnimatedLine = Animated.createAnimatedComponent(Line);
+import Animated, { useAnimatedKeyboard, useAnimatedStyle } from 'react-native-reanimated';
+import EmailInput from './EmailInput';
+import PasswordInput from './PasswordInput';
 
 export default function SignIn() {
   const router = useRouter();
@@ -42,85 +36,24 @@ export default function SignIn() {
     }
   };
 
-  const progress = useSharedValue(hidePassword ? 1 : 0);
-
-  useEffect(() => {
-    progress.value = withTiming(hidePassword ? 1 : 0, { duration: 400 });
-  }, [hidePassword])
-
-
-  const lineLength = Math.sqrt(24 * 24 + 24 * 24);
-  const animatedProps = useAnimatedProps(() => ({
-    strokeDashoffset: lineLength * (1 - progress.value),
-  }));
-
-
   return (
     <Wrapper>
       <Pressable onPress={() => router.replace('(welcome)')}>
         <MaterialIcons name="arrow-back" size={32} color="#edfc00" />
       </Pressable>
+
       <View className="flex-1 justify-end">
         <Animated.View className="flex-1 justify-end mb-10 gap-5 max-h-[70%]" style={animatedStyles}>
           <View className="flex gap-5" >
-            <IconTextInput
-              leftIcon={
-                <MaterialCommunityIcons
-                  name="email-outline"
-                  size={24}
-                  color="white"
-                />
-              }
-              placeholder="Enter your email"
-              autoCapitalize="none"
-              keyboardType="email-address"
-              onChangeText={setEmail}
+            <EmailInput
               value={email}
-              placeholderTextColor="white"
+              onChangeText={setEmail}
             />
-
-            <IconTextInput
-              leftIcon={
-              <MaterialIcons name="lock-outline" size={24} color="white"/>
-              }
-              rightIcon={
-                <View>
-                  <MaterialCommunityIcons name="eye-outline" size={24} color="white" />
-                  <Svg
-                    width={24}
-                    height={24}
-                    className=""
-                    style={{ position: "absolute", top: 0, left: 0 }}
-                  >
-                    <AnimatedLine
-                      x1="0"
-                      y1="0"
-                      x2="24"
-                      y2="24"
-                      stroke="white"
-                      strokeWidth="2"
-                      strokeDasharray={lineLength}
-                      animatedProps={animatedProps}
-                    />
-                    <AnimatedLine
-                      x1="0"
-                      y1="-3"
-                      x2="24"
-                      y2="21"
-                      stroke="black"
-                      strokeWidth="2"
-                      strokeDasharray={lineLength}
-                      animatedProps={animatedProps}
-                    />
-                  </Svg>
-                </View>
-              }
-              rightIconOnPress={() => setHidePassword(!hidePassword)}
-              placeholder="Enter your password"
-              onChangeText={setPassword}
+            <PasswordInput
               value={password}
-              placeholderTextColor="white"
-              secureTextEntry={hidePassword}
+              onChangeText={setPassword}
+              hidePassword={hidePassword}
+              setHidePassword={setHidePassword}
             />
           </View>
 
